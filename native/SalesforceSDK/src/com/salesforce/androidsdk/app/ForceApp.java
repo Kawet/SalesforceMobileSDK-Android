@@ -200,11 +200,14 @@ public abstract class ForceApp extends Application {
 	/**
      * Wipe out the stored authentication credentials (remove account) and restart the app.
      */
-    public void logout(Activity frontActivity) {
+	public void logout()
+	{
     	// Finish front activity if specified
+    	/*
     	if (frontActivity != null) {
     		frontActivity.finish();
     	}
+    	*/
 
     	// Reset smartstore
     	if (hasSmartStore()) {
@@ -225,11 +228,27 @@ public abstract class ForceApp extends Application {
 		        CookieManager.getInstance().removeAllCookie();
 		    	
 		        // Restart application
-		        Intent i = new Intent(ForceApp.this, getMainActivityClass());
-		        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		        startActivity(i);
+		        //Intent i = new Intent(ForceApp.this, getMainActivityClass());
+		        //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		        //startActivity(i);
 			}
 		});
+    }
+	
+	public void logout(AccountManagerCallback<Boolean> callBack) 
+	{
+    	// Reset smartstore
+    	if (hasSmartStore()) 
+    	{
+    		getSmartStore().dropAllSoups();
+    	}
+    	
+    	// Reset passcode if any
+    	getPasscodeManager().reset(this);
+    	
+    	// Remove account if any
+    	ClientManager clientMgr = new ClientManager(this, getAccountType(), null/* we are not doing any login*/);
+    	clientMgr.removeAccountAsync(callBack);
     }
     
 	/**

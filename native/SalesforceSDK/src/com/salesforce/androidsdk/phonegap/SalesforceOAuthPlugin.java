@@ -354,7 +354,7 @@ public class SalesforceOAuthPlugin extends Plugin {
 	 * @param ctx
 	 */
 	protected static void logout(Activity ctx) {
-		ForceApp.APP.logout(ctx);
+		ForceApp.APP.logout();
 		SalesforceOAuthPlugin.client = null;
 		SalesforceOAuthPlugin.autoRefreshOnForeground = false;
 		SalesforceOAuthPlugin.autoRefreshPeriodically = false;
