@@ -5,5 +5,6 @@
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="lib" path="libs/phonegap-1.2.0.jar" sourcepath="libs/callback-android-framework/src"/>
 	<classpathentry kind="lib" path="libs/sqlcipher.jar"/>
+	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

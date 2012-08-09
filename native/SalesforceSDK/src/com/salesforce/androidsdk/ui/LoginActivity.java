@@ -128,7 +128,8 @@ public class LoginActivity extends AccountAuthenticatorActivity implements OAuth
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
 			wasBackgrounded = true;
-			moveTaskToBack(true);
+			this.finish();
+			//moveTaskToBack(true);
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);

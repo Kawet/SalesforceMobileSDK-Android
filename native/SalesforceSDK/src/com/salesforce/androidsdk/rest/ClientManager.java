@@ -31,12 +31,15 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
 import android.accounts.AccountManagerFuture;
 import android.accounts.AccountsException;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -289,7 +292,44 @@ public class ClientManager {
 	public void removeAccountAsync(AccountManagerCallback<Boolean> callback) {
 		Account acc = getAccount();
 		if (acc != null)
+		{
 			accountManager.removeAccount(acc, callback, null);
+		}
+		else
+		{
+			callback.run(new AccountManagerFuture<Boolean>()
+			{
+				@Override
+				public boolean isDone() 
+				{
+					return false;
+				}
+				
+				@Override
+				public boolean isCancelled() 
+				{
+					return true;
+				}
+				
+				@Override
+				public Boolean getResult(long timeout, TimeUnit unit) throws OperationCanceledException, IOException,AuthenticatorException 
+				{
+					return false;
+				}
+				
+				@Override
+				public Boolean getResult() throws OperationCanceledException, IOException, AuthenticatorException
+				{
+					return false;
+				}
+				
+				@Override
+				public boolean cancel(boolean mayInterruptIfRunning) 
+				{
+					return true;
+				}
+			});
+		}
 	}
 
 
