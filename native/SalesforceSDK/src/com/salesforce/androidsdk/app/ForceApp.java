@@ -202,9 +202,11 @@ public abstract class ForceApp extends Application {
      */
     public void logout(Activity frontActivity) {
     	// Finish front activity if specified
+    	/*
     	if (frontActivity != null) {
     		frontActivity.finish();
     	}
+    	*/
 
     	// Reset smartstore
     	if (hasSmartStore()) {
@@ -225,9 +227,9 @@ public abstract class ForceApp extends Application {
 		        CookieManager.getInstance().removeAllCookie();
 		    	
 		        // Restart application
-		        Intent i = new Intent(ForceApp.this, getMainActivityClass());
-		        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-		        startActivity(i);
+		        //Intent i = new Intent(ForceApp.this, getMainActivityClass());
+		        //i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		        //startActivity(i);
 			}
 		});
     }
