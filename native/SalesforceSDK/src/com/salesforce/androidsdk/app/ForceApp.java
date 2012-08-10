@@ -200,7 +200,7 @@ public abstract class ForceApp extends Application {
 	/**
      * Wipe out the stored authentication credentials (remove account) and restart the app.
      */
-    public void logout(Activity frontActivity) {
+	public void logout(Activity frontActivity) {
     	// Finish front activity if specified
     	/*
     	if (frontActivity != null) {
@@ -232,6 +232,22 @@ public abstract class ForceApp extends Application {
 		        //startActivity(i);
 			}
 		});
+    }
+	
+	public void logout(Activity frontActivity, AccountManagerCallback<Boolean> callBack) 
+	{
+    	// Reset smartstore
+    	if (hasSmartStore()) 
+    	{
+    		getSmartStore().dropAllSoups();
+    	}
+    	
+    	// Reset passcode if any
+    	getPasscodeManager().reset(this);
+    	
+    	// Remove account if any
+    	ClientManager clientMgr = new ClientManager(this, getAccountType(), null/* we are not doing any login*/);
+    	clientMgr.removeAccountAsync(callBack);
     }
     
 	/**
