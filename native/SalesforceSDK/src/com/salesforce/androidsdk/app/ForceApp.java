@@ -200,7 +200,8 @@ public abstract class ForceApp extends Application {
 	/**
      * Wipe out the stored authentication credentials (remove account) and restart the app.
      */
-	public void logout(Activity frontActivity) {
+	public void logout()
+	{
     	// Finish front activity if specified
     	/*
     	if (frontActivity != null) {
@@ -234,7 +235,7 @@ public abstract class ForceApp extends Application {
 		});
     }
 	
-	public void logout(Activity frontActivity, AccountManagerCallback<Boolean> callBack) 
+	public void logout(AccountManagerCallback<Boolean> callBack) 
 	{
     	// Reset smartstore
     	if (hasSmartStore()) 
