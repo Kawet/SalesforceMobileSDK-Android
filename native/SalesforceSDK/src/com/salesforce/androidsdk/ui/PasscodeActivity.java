@@ -26,7 +26,6 @@
  */
 package com.salesforce.androidsdk.ui;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -34,6 +33,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
+import com.good.gd.Activity;
 import com.salesforce.androidsdk.app.ForceApp;
 import com.salesforce.androidsdk.security.PasscodeManager;
 
