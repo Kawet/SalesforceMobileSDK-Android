@@ -149,39 +149,50 @@ public class HttpAccess extends BroadcastReceiver {
         
         if (conMgr == null) return;
         
-        // Try WIFI data connection
-        NetworkInfo wifiInfo = conMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-        if (wifiInfo.isConnected()) {
+        // Check if an active network is available.
+        final NetworkInfo activeInfo = conMgr.getActiveNetworkInfo();
+        if (activeInfo != null && activeInfo.isConnected()) {
+            setHasNetwork(true, null);
+            return;
+        }
+        
+        // Try WIFI data connection.
+        final NetworkInfo wifiInfo = conMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        if (wifiInfo != null && wifiInfo.isConnected()) {
             setHasNetwork(true, null);
             return;
         }
 
-        // Try mobile connection
-        NetworkInfo mobileInfo = conMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-        
-        // Reset network if type changed 
-        if (currentNetworkSubType != mobileInfo.getSubtype()) {
-            currentNetworkSubType = mobileInfo.getSubtype();
-            resetNetwork();
-        }
-        
-        // On 2.2 this receiver fires when we register for it, so we get the current state, not a transition, so 
-        // typically in this case isFailover() is going to be true from the last failover, so we don't reset the  
-        // network in that case. We also have the default HttpAccess instance created early on
-        // so that this initial receive can be processed before we try and make any calls
-        if (mobileInfo.isFailover()) {
-            if (!mobileInfo.isConnected()) {
-            	setHasNetwork(false, "No active data connection");
-            	return;
-            }
-        }
-        
-        if (mobileInfo.isConnected()) {
-            setHasNetwork(true, null);
+        // Try mobile connection.
+        final NetworkInfo mobileInfo = conMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+		if (mobileInfo == null) {
+            setHasNetwork(false, "No active data connection");
             return;
         }
-        
-        setHasNetwork(false, mobileInfo.getReason() == null ? wifiInfo.getReason() : mobileInfo.getReason());
+
+        // Reset network if type changed.
+        if (mobileInfo != null) {
+            if (currentNetworkSubType != mobileInfo.getSubtype()) {
+                currentNetworkSubType = mobileInfo.getSubtype();
+                resetNetwork();
+            }
+
+            // On 2.2 this receiver fires when we register for it, so we get the current state, not a transition, so
+            // typically in this case isFailover() is going to be true from the last failover, so we don't reset the
+            // network in that case. We also have the default HttpAccess instance created early on
+            // so that this initial receive can be processed before we try and make any calls.
+            if (mobileInfo.isFailover()) {
+                if (!mobileInfo.isConnected()) {
+                    setHasNetwork(false, "No active data connection");
+                    return;
+                }
+            }
+            if (mobileInfo.isConnected()) {
+                setHasNetwork(true, null);
+                return;
+            }
+            setHasNetwork(false, mobileInfo.getReason() == null ? wifiInfo.getReason() : mobileInfo.getReason());
+        }
 	}
 	
 	/**
