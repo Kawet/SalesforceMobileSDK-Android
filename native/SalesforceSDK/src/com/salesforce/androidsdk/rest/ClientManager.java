@@ -551,4 +551,52 @@ public class ClientManager {
                                     options.getString(CLIENT_SECRET));
         }
     }
+    
+    // Kawet Auth
+    public static class AuthData
+    {
+		public String	authToken		= null;
+		public String	refreshToken	= null;
+		public String	loginServer		= null;
+		public String	idUrl			= null;
+		public String	instanceServer	= null;
+		public String	orgId			= null;
+		public String	userId			= null;
+		public String	username		= null;
+		public String	accountName		= null;
+		public String	clientId		= null;
+    }
+    
+    public RestClient peekRestClientKawet(AuthData authData) throws AccountInfoNotFoundException 
+    {
+        String authToken = authData.authToken;
+        String refreshToken = authData.refreshToken;
+        String loginServer = authData.loginServer;
+        String idUrl = authData.idUrl;
+        String instanceServer = authData.instanceServer;
+        String orgId = authData.orgId;
+        String userId = authData.userId;
+        String username = authData.username;
+        String accountName = authData.accountName;
+        String clientId = authData.clientId;
+
+        if (authToken == null)
+            throw new AccountInfoNotFoundException(AccountManager.KEY_AUTHTOKEN);
+        if (instanceServer == null)
+            throw new AccountInfoNotFoundException(AuthenticatorService.KEY_INSTANCE_URL);
+        if (userId == null)
+            throw new AccountInfoNotFoundException(AuthenticatorService.KEY_USER_ID);
+        if (orgId == null)
+            throw new AccountInfoNotFoundException(AuthenticatorService.KEY_ORG_ID);
+
+        try {
+            AccMgrAuthTokenProvider authTokenProvider = new AccMgrAuthTokenProvider(this, authToken, refreshToken);
+            ClientInfo clientInfo = new ClientInfo(clientId, new URI(instanceServer), new URI(loginServer), new URI(idUrl), accountName, username, userId, orgId);
+            return new RestClient(clientInfo, authToken, HttpAccess.DEFAULT, authTokenProvider);
+        }
+        catch (URISyntaxException e) {
+            Log.w("ClientManager:peekRestClient", "Invalid server URL", e);
+            throw new AccountInfoNotFoundException("invalid server url", e);
+        }
+    }
 }
